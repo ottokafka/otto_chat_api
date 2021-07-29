@@ -26,7 +26,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 	println("Message to Server", jsonResponse.Name) // simply print the email
 
 	// Check if user already exists
-	user, err := Client.HGet("users", jsonResponse.Name).Result()
+	user, err := RedisClient.HGet("users", jsonResponse.Name).Result()
 	if err != nil {
 	}
 
@@ -35,7 +35,7 @@ func CreateUser(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode("User " + user + " already exists choose another name")
 	} else {
 		// save user in Redis
-		errset := Client.HSet("users", jsonResponse.Name, jsonResponse.Name).Err()
+		errset := RedisClient.HSet("users", jsonResponse.Name, jsonResponse.Name).Err()
 		if errset != nil {
 			panic(errset)
 		}

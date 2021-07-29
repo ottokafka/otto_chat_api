@@ -2,9 +2,15 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/joho/godotenv"
 )
+
+// load from .env file
+var err = godotenv.Load()
+var secret = os.Getenv("secret")
 
 // Create a token
 func CreateToken(username string) string {
@@ -13,7 +19,6 @@ func CreateToken(username string) string {
 		jwt.StandardClaims
 	}
 
-	print("user ", username)
 	claims := customClaims{
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
@@ -59,7 +64,7 @@ func AuthenticateToken(userJwt string) string {
 	// }
 
 	username := claims.Username
-	fmt.Println("username ", username)
+	// fmt.Println("username ", username)
 
 	return username
 }

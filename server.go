@@ -24,16 +24,20 @@ func main() {
 
 	// Websocket connection
 	Router.HandleFunc("/socket", SocketHandler)
+	go handleMessages()
 
 	// Testing if Server is up
 	Router.HandleFunc("/", Test).Methods("GET")
 
 	// Test connect to redis
-	RedisTest()
+	// RedisTest()
 
+	// ExampleClient()
 	http.ListenAndServe(port, Router)
+
 }
 
+// Test if server is running: GET localhost:4000
 func Test(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode("Go api is running")
 }

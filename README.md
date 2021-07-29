@@ -1,4 +1,26 @@
-# GETTING STARTED creating a fresh GO project
+# Chat api
+
+This is a simple chat api built with the go language. 
+Connects to redis to save messages
+use JWT method to authenticate users
+
+# Packages used
+
+go get github.com/joho/godotenv
+
+This is basically like node to grab .env file
+
+
+# GETTING STARTED
+
+Need to have go installed ( macOs: `brew install go`)
+
+`go run .` 
+
+Want auto reload and auto rebuild read below - air
+
+
+# creating a fresh GO project
 
 ```bash
 mkdir hello
@@ -6,7 +28,7 @@ cd hello
 go mod init example.com/hello
 ```
 
-# Download live reload with air
+# Download live reload with air ( kinda like nodemon )
 
 ```
 # binary will be $(go env GOPATH)/bin/air

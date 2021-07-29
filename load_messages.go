@@ -27,7 +27,7 @@ func LoadMessages(w http.ResponseWriter, r *http.Request) {
 	println("Message to Server", jsonResponse.Name) // simply print the email
 
 	// Check if user exists
-	user, err := Client.HGet("users", jsonResponse.Name).Result()
+	user, err := RedisClient.HGet("users", jsonResponse.Name).Result()
 	if err != nil {
 	}
 
@@ -36,7 +36,7 @@ func LoadMessages(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode("User " + user + " has no messages")
 	} else {
 		// load user msg from Redis
-		msgs, err := Client.HGet("users", jsonResponse.Name).Result()
+		msgs, err := RedisClient.HGet("users", jsonResponse.Name).Result()
 		if err != nil {
 		}
 		println("load msgs", msgs)
