@@ -19,8 +19,12 @@ func main() {
 	fmt.Println("http://localhost" + port)
 	Router.HandleFunc("/", MessagePost).Methods("POST")
 	Router.HandleFunc("/create", CreateUser).Methods("POST")
+	Router.HandleFunc("/signin", SignIn).Methods("POST")
+
 	Router.HandleFunc("/allusers", AllUsers).Methods("GET")
+	Router.HandleFunc("/allcontacts", AllUsers).Methods("GET")
 	Router.HandleFunc("/savemsg", SaveMessage).Methods("POST")
+	Router.HandleFunc("/addcontact", AddContact).Methods("POST")
 
 	// Websocket connection
 	Router.HandleFunc("/socket", SocketHandler)

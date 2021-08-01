@@ -13,18 +13,12 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 	// name := query["user"][0]
 	// fmt.Println(name)
 
-	// We need to use to use the struct model to map the json data to
-	type User struct {
-		Name string `json:"name"`
-		Pin  int    `json:"pin"`
-	}
-
-	var jsonResponse User
+	var jsonResponse UserResponse
 
 	// We decode the incoming data and convert it to a json this gets sent to the client
 	json.NewDecoder(r.Body).Decode(&jsonResponse)
 
-	println("Message to Server", jsonResponse.Name) // simply print the email
+	println("Message to Server", jsonResponse.User) // simply print the email
 
 	all, err := RedisClient.HGetAll("names").Result()
 	if err != nil {

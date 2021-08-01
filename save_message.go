@@ -45,7 +45,7 @@ func SaveMessage(w http.ResponseWriter, r *http.Request) {
 	// 	}
 	// 	println("load msgs", msgs)
 
-	// 	json.NewEncoder(w).Encode(responseBody{
+	// 	json.NewEncoder(w).Encode(ResponseBody{
 	// 		Messages: "example-auth-token",
 	// 		User:     jsonResponse.Name,
 	// 	})

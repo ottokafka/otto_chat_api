@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"os"
 
@@ -12,6 +13,11 @@ import (
 var err = godotenv.Load()
 var secret = os.Getenv("secret")
 
+type UserValid struct {
+	User  string `json:"user"`
+	Valid bool   `json:"valid"`
+}
+
 // Create a token
 func CreateToken(username string) string {
 	type customClaims struct {
@@ -22,7 +28,7 @@ func CreateToken(username string) string {
 	claims := customClaims{
 		Username: username,
 		StandardClaims: jwt.StandardClaims{
-			Issuer: "macchat.com",
+			Issuer: "ottochat.com",
 		},
 	}
 
@@ -38,7 +44,7 @@ func CreateToken(username string) string {
 }
 
 // Authenticate token
-func AuthenticateToken(userJwt string) string {
+func AuthenticateToken(userJwt string) []byte {
 
 	type customClaims struct {
 		Username string `json:"username"`
@@ -56,7 +62,18 @@ func AuthenticateToken(userJwt string) string {
 
 	claims, ok := token.Claims.(*customClaims)
 	if !ok {
+		println("fucked up token")
+		var users []UserValid
+		users = append(users, UserValid{
+			User:  "none",
+			Valid: false,
+		})
 
+		data, err := json.Marshal(users)
+		if err != nil {
+			panic(err)
+		}
+		return data
 	}
 
 	// if claims.ExpiresAt < time.Now().UTC().Unix() {
@@ -66,5 +83,19 @@ func AuthenticateToken(userJwt string) string {
 	username := claims.Username
 	// fmt.Println("username ", username)
 
-	return username
+	// Return json {username: otto, Valid: true}
+
+	var users []UserValid
+	users = append(users, UserValid{
+		User:  username,
+		Valid: true,
+	})
+
+	jsonUsers, err := json.Marshal(users)
+	if err != nil {
+		panic(err)
+	}
+
+	println("User is Valid returning {user:otto, Valid:true}")
+	return jsonUsers
 }
