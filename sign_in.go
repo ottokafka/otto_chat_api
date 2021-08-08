@@ -18,40 +18,37 @@ func SignIn(w http.ResponseWriter, r *http.Request) {
 
 	// We decode the incoming data and convert it to a json
 	json.NewDecoder(r.Body).Decode(&jsonResponse)
-
-	println("Message to Server", jsonResponse.Name) // simply print the email
-
-	// Check user name and pin number
-
-	// Check if user already exists
-	user, err := RedisClient.HGet("users", jsonResponse.Name).Result()
+	println("incoming user data ", jsonResponse.Name, jsonResponse.Pin)
+	// Check if user and password before giving a token
+	redisUser, err := RedisClient.HGet("users", jsonResponse.Name).Result()
 	if err != nil {
 		println(err)
 	}
 
-	println("Got the user", user)
+	// fmt.Println("Got the user", redisUser)
 
+	// Unmarshal the Json from Redis
 	var redisJson UserSignup
-	bytes := []byte(user)
+	bytes := []byte(redisUser)
 	err2 := json.Unmarshal(bytes, &redisJson)
 	if err2 != nil {
 		panic(err2)
 	}
 
-	println("user data ", redisJson.Name, redisJson.Pin)
+	println("Redis user data ", redisJson.Name, redisJson.Pin)
+	// checkName := jsonResponse.Name != redisJson.Name
 
-	check := jsonResponse.Name == user
-	if check {
-		json.NewEncoder(w).Encode("User " + user + " already exists choose another name")
-	} else {
-		// save user in Redis
-		// errset := RedisClient.HSet("users", jsonResponse.Name, jsonResponse.Name).Err()
-		// if errset != nil {
-		// 	panic(errset)
-		// }
-
+	if redisJson.Pin == jsonResponse.Pin && jsonResponse.Name == redisJson.Name {
+		println("user and password match send a tooken")
+		// Password is correct send him/her a token brother
 		json.NewEncoder(w).Encode(ResponseBody{
 			Token: CreateToken(jsonResponse.Name),
+		})
+	} else {
+		println("Not matching user and password ")
+		// user pass is wrong send back message
+		json.NewEncoder(w).Encode(UserResponse{
+			Message: "Invalid Credentials",
 		})
 	}
 }

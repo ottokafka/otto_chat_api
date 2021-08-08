@@ -8,5 +8,5 @@ type UserResponse struct {
 // We need to use to use the struct model to map the json data to
 type UserSignup struct {
 	Name string `json:"name"`
-	Pin  int    `json:"pin"`
+	Pin  string `json:"pin"`
 }
