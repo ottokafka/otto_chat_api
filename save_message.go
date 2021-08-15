@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"net/http"
 )
 
@@ -13,27 +14,24 @@ func SaveMessage(w http.ResponseWriter, r *http.Request) {
 	// 	Name string `json:"name"`
 	// }
 
-	// type responseBody struct {
-	// 	Messages string `json:"token"`
-	// 	User     string `json:"user"`
-	// }
+	type ResponseBody struct {
+		Messages string `json:"message"`
+		Time     string `json:"time"`
+		User     string `json:"user"`
+		User2    string `json:"user2"`
+	}
 
-	// type msgBody struct {
-	// 	Msg  string `json:"msg"`
-	// 	Time string `json:"time"`
-	// }
-
-	// var jsonResponse User
+	var jsonResponse ResponseBody
 
 	// // We decode the incoming data and convert it to a json
-	// json.NewDecoder(r.Body).Decode(&jsonResponse)
+	json.NewDecoder(r.Body).Decode(&jsonResponse)
 
 	AuthenticateToken(token[0])
 
-	// println("Message to Server", jsonResponse.Name) // simply print the email
+	println("save message user: ", jsonResponse.User) // simply print the email
 
 	// // Check if user exists
-	// user, err := Client.HGet("users", jsonResponse.Name).Result()
+	// user, err := RedisClient.HGet("users", jsonResponse.Name).Result()
 	// if err != nil {
 	// }
 
@@ -42,12 +40,12 @@ func SaveMessage(w http.ResponseWriter, r *http.Request) {
 	// 	json.NewEncoder(w).Encode("User " + user + " has no messages")
 	// } else {
 	// 	// load user msg from Redis
-	// 	msgs, err := Client.HGet("users", jsonResponse.Name).Result()
+	// 	msgs, err := RedisClient.HGet("users", jsonResponse.Name).Result()
 	// 	if err != nil {
 	// 	}
 	// 	println("load msgs", msgs)
 
-	// 	json.NewEncoder(w).Encode(responseBody{
+	// 	json.NewEncoder(w).Encode(ResponseBody{
 	// 		Messages: "example-auth-token",
 	// 		User:     jsonResponse.Name,
 	// 	})

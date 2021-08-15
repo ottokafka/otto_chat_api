@@ -9,20 +9,18 @@ import (
 // MessagePost: POST
 func AllUsers(w http.ResponseWriter, r *http.Request) {
 
-	// We need to use to use the struct model to map the json data to
-	type User struct {
-		Name string `json:"name"`
-		Pin  int    `json:"pin"`
-	}
+	// query := r.URL.Query()
+	// name := query["user"][0]
+	// fmt.Println(name)
 
-	var jsonResponse User
+	var jsonResponse UserResponse
 
 	// We decode the incoming data and convert it to a json this gets sent to the client
 	json.NewDecoder(r.Body).Decode(&jsonResponse)
 
-	println("Message to Server", jsonResponse.Name) // simply print the email
+	println("Message to Server", jsonResponse.User) // simply print the email
 
-	all, err := Client.HGetAll("names").Result()
+	all, err := RedisClient.HGetAll("names").Result()
 	if err != nil {
 		panic(err)
 	}
@@ -32,7 +30,7 @@ func AllUsers(w http.ResponseWriter, r *http.Request) {
 	for {
 		var keys []string
 		var err error
-		keys, cursor, err = Client.Scan(cursor, "names", 0).Result()
+		keys, cursor, err = RedisClient.Scan(cursor, "names", 0).Result()
 		if err != nil {
 			panic(err)
 		}
